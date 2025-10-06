@@ -1,0 +1,24 @@
+name: Unzip on Upload
+
+on:
+  push:
+    paths:
+      - 'rudram-main.zip'  # triggers when ZIP file changes
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Unzip the file
+        run: unzip myfiles.zip -d unzipped
+
+      - name: Commit unzipped files
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add unzipped/
+          git commit -m "Unzipped myfiles.zip automatically" || echo "No changes to commit"
+          git push
